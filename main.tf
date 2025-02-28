@@ -1,3 +1,6 @@
+
+#Autor - Erick Bezerra de Medeiros
+
 provider "azurerm" {
   features {}
   subscription_id = "1aa7849c-6a87-42ab-b40e-b9fef2cd4b97"
