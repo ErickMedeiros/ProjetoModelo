@@ -3,8 +3,8 @@
 
 provider "azurerm" {
   features {}
-  subscription_id = "1aa7849c-6a87-42ab-b40e-b9fef2cd4b97"
-  tenant_id       = "8100553e-2209-4d6b-b431-0a90618d00da"
+  subscription_id = "990eb721-14f5-4a32-9154-c213e7d1ba28"
+  tenant_id       = "409f9d07-b590-4145-96ff-50ada9a681dd"
 }
 
 # Criação dos Resource Groups
