@@ -11,7 +11,20 @@ terraform {
     }
   }
 }
+########### BLOCO DE VARIAVEIS ######
+variable "azure_region" {
+ type = string
+ default = "eastus" 
+ description = "description"
+}
 
+variable "resource_group_name" {
+  type = string
+  default = "eastus-rg"
+  description = "description"
+}
+
+########### BLOCO DE RECURSOS ######
 
 provider "azurerm" {
   features {}
@@ -21,8 +34,8 @@ provider "azurerm" {
 
 # Criação dos Resource Groups
 resource "azurerm_resource_group" "eastus_rg" {
-  name     = "eastus-rg"
-  location = "East US"
+  name     = var.resource_group_name
+  location = var.azure_region
 }
 
 resource "azurerm_resource_group" "brazilsouth_rg" {
