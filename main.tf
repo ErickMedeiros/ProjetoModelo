@@ -137,7 +137,7 @@ resource "azurerm_windows_virtual_machine" "vm01" {
 
   network_interface_ids = [azurerm_network_interface.nicsrv01.id]
 
-  computer_name = "winvmname" # 🔹 Nome do computador (máx. 15 caracteres)
+  computer_name = "VM-SRVAD01" # 🔹 Nome do computador (máx. 15 caracteres)
 
   os_disk {
     caching              = "ReadWrite"
@@ -181,6 +181,7 @@ resource "azurerm_network_interface_security_group_association" "nic_nsg_assoc" 
   network_security_group_id = azurerm_network_security_group.nsg.id
 }
 
+####################### VM02 ###############################
 
 # 🔹 Criando uma Interface de Rede (NIC) 
 resource "azurerm_network_interface" "nicsrv02" {
@@ -207,7 +208,7 @@ resource "azurerm_windows_virtual_machine" "vm02" {
 
   network_interface_ids = [azurerm_network_interface.nicsrv02.id]
 
-  computer_name = "srvad02" # 🔹 Nome do computador (máx. 15 caracteres)
+  computer_name = "VM-SRVAD02" # 🔹 Nome do computador (máx. 15 caracteres)
 
   os_disk {
     caching              = "ReadWrite"
@@ -241,7 +242,7 @@ resource "azurerm_network_security_group" "nsg02" {
   }
 }
 
-####################### WEB ###############################
+####################### VM WEB 01 ###############################
 # 🔹 Criando um IP Público 02
 resource "azurerm_public_ip" "pipweb01" {
   name                = "pipweb01"
@@ -277,7 +278,7 @@ resource "azurerm_windows_virtual_machine" "vm03" {
   network_interface_ids = [azurerm_network_interface.nicweb01.id]
   #network_interface_ids = [azurerm_network_interface.nicsrv02.id]
 
-  computer_name = "vmweb01" # 🔹 Nome do computador (máx. 15 caracteres)
+  computer_name = "VM-WEB01" # 🔹 Nome do computador (máx. 15 caracteres)
 
   os_disk {
     caching              = "ReadWrite"
@@ -319,4 +320,16 @@ resource "azurerm_network_security_group" "nsgweb" {
 resource "azurerm_network_interface_security_group_association" "nic_nsg_assoc02" {
   network_interface_id      = azurerm_network_interface.nicweb01.id
   network_security_group_id = azurerm_network_security_group.nsgweb.id
+}
+
+resource "azurerm_storage_account" "sto001prod" {
+  name                     = "sto001prodeastus"
+  resource_group_name      = var.resource_group_name_eastus
+  location                 = var.azure_region_eastus
+  account_tier             = "Standard"
+  account_replication_type = "LRS"
+
+  tags = {
+    environment = "Homologa"
+  }
 }
