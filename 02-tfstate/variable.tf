@@ -14,7 +14,7 @@ variable "resource_group_name_terraform" {
 
 variable "sa_name" {
   type        = string
-  default     = "sto002prod"
+  default     = "stoprod0001tfstate"
   description = "description"
 
 }
