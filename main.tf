@@ -1,6 +1,18 @@
 
 #Autor - Erick Bezerra de Medeiros
 
+# We strongly recommend using the required_providers block to set the
+# Azure Provider source and version being used
+terraform {
+  required_providers {
+    azurerm = {
+      source  = "hashicorp/azurerm"
+      version = "=3.0.0"
+    }
+  }
+}
+
+
 provider "azurerm" {
   features {}
   subscription_id = "990eb721-14f5-4a32-9154-c213e7d1ba28"
@@ -69,34 +81,34 @@ resource "azurerm_subnet" "japaneast_core_subnet" {
 
 # Configuração de Peering entre as VNets (EastUS <-> BrazilSouth, EastUS <-> JapanEast)
 resource "azurerm_virtual_network_peering" "eastus_to_brazilsouth_peering" {
-  name                        = "eastus-to-brazilsouth-peering"
-  resource_group_name         = azurerm_resource_group.eastus_rg.name
-  virtual_network_name        = azurerm_virtual_network.eastus_vnet.name
-  remote_virtual_network_id   = azurerm_virtual_network.brazilsouth_vnet.id
+  name                         = "eastus-to-brazilsouth-peering"
+  resource_group_name          = azurerm_resource_group.eastus_rg.name
+  virtual_network_name         = azurerm_virtual_network.eastus_vnet.name
+  remote_virtual_network_id    = azurerm_virtual_network.brazilsouth_vnet.id
   allow_virtual_network_access = true
 }
 
 resource "azurerm_virtual_network_peering" "brazilsouth_to_eastus_peering" {
-  name                        = "brazilsouth-to-eastus-peering"
-  resource_group_name         = azurerm_resource_group.brazilsouth_rg.name
-  virtual_network_name        = azurerm_virtual_network.brazilsouth_vnet.name
-  remote_virtual_network_id   = azurerm_virtual_network.eastus_vnet.id
+  name                         = "brazilsouth-to-eastus-peering"
+  resource_group_name          = azurerm_resource_group.brazilsouth_rg.name
+  virtual_network_name         = azurerm_virtual_network.brazilsouth_vnet.name
+  remote_virtual_network_id    = azurerm_virtual_network.eastus_vnet.id
   allow_virtual_network_access = true
 }
 
 resource "azurerm_virtual_network_peering" "eastus_to_japaneast_peering" {
-  name                        = "eastus-to-japaneast-peering"
-  resource_group_name         = azurerm_resource_group.eastus_rg.name
-  virtual_network_name        = azurerm_virtual_network.eastus_vnet.name
-  remote_virtual_network_id   = azurerm_virtual_network.japaneast_vnet.id
+  name                         = "eastus-to-japaneast-peering"
+  resource_group_name          = azurerm_resource_group.eastus_rg.name
+  virtual_network_name         = azurerm_virtual_network.eastus_vnet.name
+  remote_virtual_network_id    = azurerm_virtual_network.japaneast_vnet.id
   allow_virtual_network_access = true
 }
 
 resource "azurerm_virtual_network_peering" "japaneast_to_eastus_peering" {
-  name                        = "japaneast-to-eastus-peering"
-  resource_group_name         = azurerm_resource_group.japaneast_rg.name
-  virtual_network_name        = azurerm_virtual_network.japaneast_vnet.name
-  remote_virtual_network_id   = azurerm_virtual_network.eastus_vnet.id
+  name                         = "japaneast-to-eastus-peering"
+  resource_group_name          = azurerm_resource_group.japaneast_rg.name
+  virtual_network_name         = azurerm_virtual_network.japaneast_vnet.name
+  remote_virtual_network_id    = azurerm_virtual_network.eastus_vnet.id
   allow_virtual_network_access = true
 }
 
@@ -106,7 +118,7 @@ resource "azurerm_public_ip" "pip-publico" {
   name                = "pipsrv01"
   resource_group_name = azurerm_resource_group.eastus_rg.name
   location            = azurerm_resource_group.eastus_rg.location
-  allocation_method   = "Static"  # Pode ser "Static" ou "Dynamic"
+  allocation_method   = "Static"   # Pode ser "Static" ou "Dynamic"
   sku                 = "Standard" # "Standard" mantém IP fixo mesmo se a VM desligar
 }
 
@@ -131,11 +143,11 @@ resource "azurerm_windows_virtual_machine" "vm01" {
   location            = azurerm_resource_group.eastus_rg.location
   size                = "Standard_D2s_v3"
   admin_username      = "adminuser"
-  admin_password      = "Deploy@124578#"  # ⚠️ Recomendado usar Azure Key Vault
+  admin_password      = "Deploy@124578#" # ⚠️ Recomendado usar Azure Key Vault
 
   network_interface_ids = [azurerm_network_interface.nicsrv01.id]
 
-  computer_name = "winvmname"  # 🔹 Nome do computador (máx. 15 caracteres)
+  computer_name = "winvmname" # 🔹 Nome do computador (máx. 15 caracteres)
 
   os_disk {
     caching              = "ReadWrite"
@@ -166,10 +178,10 @@ resource "azurerm_network_security_group" "nsg" {
     priority                   = 1000
     direction                  = "Inbound"
     access                     = "Allow"
-    protocol                  = "Tcp"
-    source_port_range         = "*"
-    destination_port_range    = "3389"
-    source_address_prefix     = "*"
+    protocol                   = "Tcp"
+    source_port_range          = "*"
+    destination_port_range     = "3389"
+    source_address_prefix      = "*"
     destination_address_prefix = "*"
   }
 }
@@ -190,7 +202,7 @@ resource "azurerm_network_interface" "nicsrv02" {
     name                          = "srv02-nic-config"
     subnet_id                     = azurerm_subnet.brazilsouth_core_subnet.id
     private_ip_address_allocation = "Dynamic"
-    
+
   }
 }
 
@@ -201,11 +213,11 @@ resource "azurerm_windows_virtual_machine" "vm02" {
   location            = azurerm_resource_group.brazilsouth_rg.location
   size                = "Standard_B4ms"
   admin_username      = "adminuser"
-  admin_password      = "Deploy@124578#"  # ⚠️ Recomendado usar Azure Key Vault
+  admin_password      = "Deploy@124578#" # ⚠️ Recomendado usar Azure Key Vault
 
   network_interface_ids = [azurerm_network_interface.nicsrv02.id]
 
-  computer_name = "srvad02"  # 🔹 Nome do computador (máx. 15 caracteres)
+  computer_name = "srvad02" # 🔹 Nome do computador (máx. 15 caracteres)
 
   os_disk {
     caching              = "ReadWrite"
@@ -231,10 +243,10 @@ resource "azurerm_network_security_group" "nsg02" {
     priority                   = 1000
     direction                  = "Inbound"
     access                     = "Allow"
-    protocol                  = "Tcp"
-    source_port_range         = "*"
-    destination_port_range    = "3389"
-    source_address_prefix     = "*"
+    protocol                   = "Tcp"
+    source_port_range          = "*"
+    destination_port_range     = "3389"
+    source_address_prefix      = "*"
     destination_address_prefix = "*"
   }
 }
@@ -245,7 +257,7 @@ resource "azurerm_public_ip" "pipweb01" {
   name                = "pipweb01"
   resource_group_name = azurerm_resource_group.japaneast_rg.name
   location            = azurerm_resource_group.japaneast_rg.location
-  allocation_method   = "Static"  # Pode ser "Static" ou "Dynamic"
+  allocation_method   = "Static"   # Pode ser "Static" ou "Dynamic"
   sku                 = "Standard" # "Standard" mantém IP fixo mesmo se a VM desligar
 }
 
@@ -270,12 +282,12 @@ resource "azurerm_windows_virtual_machine" "vm03" {
   location            = azurerm_resource_group.japaneast_rg.location
   size                = "Standard_B2ms"
   admin_username      = "adminuser"
-  admin_password      = "Deploy@124578#"  # ⚠️ Recomendado usar Azure Key Vault
+  admin_password      = "Deploy@124578#" # ⚠️ Recomendado usar Azure Key Vault
 
   network_interface_ids = [azurerm_network_interface.nicweb01.id]
   #network_interface_ids = [azurerm_network_interface.nicsrv02.id]
 
-  computer_name = "vmweb01"  # 🔹 Nome do computador (máx. 15 caracteres)
+  computer_name = "vmweb01" # 🔹 Nome do computador (máx. 15 caracteres)
 
   os_disk {
     caching              = "ReadWrite"
@@ -306,10 +318,10 @@ resource "azurerm_network_security_group" "nsgweb" {
     priority                   = 1000
     direction                  = "Inbound"
     access                     = "Allow"
-    protocol                  = "Tcp"
-    source_port_range         = "*"
-    destination_port_range    = "80"
-    source_address_prefix     = "*"
+    protocol                   = "Tcp"
+    source_port_range          = "*"
+    destination_port_range     = "80"
+    source_address_prefix      = "*"
     destination_address_prefix = "*"
   }
 }
