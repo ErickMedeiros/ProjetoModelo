@@ -1,29 +1,6 @@
 
 #Autor - Erick Bezerra de Medeiros
 
-# We strongly recommend using the required_providers block to set the
-# Azure Provider source and version being used
-terraform {
-  required_providers {
-    azurerm = {
-      source  = "hashicorp/azurerm"
-      version = "=3.0.0"
-    }
-  }
-}
-########### BLOCO DE VARIAVEIS ######
-variable "azure_region" {
- type = string
- default = "eastus" 
- description = "description"
-}
-
-variable "resource_group_name" {
-  type = string
-  default = "eastus-rg"
-  description = "description"
-}
-
 ########### BLOCO DE RECURSOS ######
 
 provider "azurerm" {
@@ -34,8 +11,8 @@ provider "azurerm" {
 
 # Criação dos Resource Groups
 resource "azurerm_resource_group" "eastus_rg" {
-  name     = var.resource_group_name
-  location = var.azure_region
+  name     = var.resource_group_name_eastus
+  location = var.azure_region_eastus
 }
 
 resource "azurerm_resource_group" "brazilsouth_rg" {
