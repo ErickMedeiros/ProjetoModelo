@@ -1,6 +1,9 @@
 
 #Autor - Erick Bezerra de Medeiros
 
+########### Armazenar TFSTATE ######
+
+
 ########### BLOCO DE RECURSOS ######
 
 provider "azurerm" {
